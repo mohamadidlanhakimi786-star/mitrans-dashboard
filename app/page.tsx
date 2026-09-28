@@ -1,7 +1,6 @@
 'use client';
-export const dynamic = 'force-dynamic'; // <-- Add this line
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 
@@ -22,7 +21,7 @@ interface Note {
   created_at: string;
 }
 
-export default function Dashboard() {
+function DashboardContent() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState<string>('');
@@ -122,5 +121,13 @@ export default function Dashboard() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div className="p-8">Loading MITRANS Dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }
